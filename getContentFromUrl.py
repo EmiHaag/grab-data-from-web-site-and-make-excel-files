@@ -3,37 +3,45 @@ import excel
 from bs4 import BeautifulSoup
 import json
 
-#list_ce = [{"wh": "AR903E46", "mail": "eh185079"},{"wh": "AR903E84", "mail": "AP185390"},{"wh": "AR903E39", "mail": "JP250221"},{"wh": "AR903E82", "mail": "GT250050"},{"wh": "AR903E83", "mail": "FC185079"}]
+#the array to fill with employee information
 list_ce = []
+
+#get data employee to get custom requests
 with open("ce.json", "r") as read_file:
         list_ce=json.load(read_file)
 
 
-# tabla partes en surplus
+# Data we need from the website
 parts_surplus_ce = []
 
+
+#get as many results as needed by each employee with this request loop
 for n in list_ce:
 
-    url = "http://fls.ncr.com/CE_Stock_Status/blackberry_global.asp?ce=" + \
+    url = "http://xxx.xxx.com/CE_Stock_Status/blackberry_global.asp?ce=" + \
         n["wh"] + "&region=6905&destination=WEB&reportoption=6&excel=False"
 
-    #parts_surplus_ce.append(["Legajo", "Part number", "Part name", "Cantidad", "Fecha", "$COST"])
+    #this conection is posible under vpn connection, if it's fail, the program advice to the user.
     try:
         response = requests.get(url)
         print(">>> Estás conectado a la VPN")
-
+        
+        #here we have the html data, we need to grab the custom data using Beautiful soup lib.
         soup = BeautifulSoup(response.text, 'lxml')
 
         totalUSDSurplus = soup.find("span").text
         print("total surplus: ", totalUSDSurplus)
-        # obtiene elemento html con id "surplus"
+        
+        # This custom webpage has an span html with an 'surplus' id
         surplus = soup.find_all(id="surplus")
+        
+        #Also we grab another text from the header. 
         header = soup.th.text
+        
         print("getting data from ce : ", n["wh"])
-        # analiza la pagina scrapeada actual y crea objeto con datos de pn en surplus
        
 
-
+        #Append data to parts_surplus_ce array.
         for row in surplus:
 
             tds = row.td.find_next_siblings()
@@ -50,11 +58,10 @@ for n in list_ce:
 
             parts_surplus_ce.append(
                 [n["wh"], row.a.text.strip(), part_name, cantidad, recibido, cost])
-            print("td: ", tds[4].text, " to ce: ", n["wh"])
-        print("end ce:", n["wh"], "=======================================")
-       
+              
         
 
+    #request failed, user is not connected to vpn 
     except requests.exceptions.RequestException as e:
     
         print("No esta conectado a la VPN. Conéctese a la misma y vuelva a ejecutar este archivo")
@@ -62,7 +69,7 @@ for n in list_ce:
         raise SystemExit(e)
 
 
-    print("creating excel file for "+ n["wh"] + ".. wait.")
+    #calls to createExcel script in excel.py    
     excel.createExcel(parts_surplus_ce, str(n["mail"]), totalUSDSurplus )
    
     parts_surplus_ce = []
