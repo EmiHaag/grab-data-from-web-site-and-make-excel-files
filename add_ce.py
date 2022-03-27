@@ -1,7 +1,7 @@
 import json
 import os
 
-
+#add employee data to json file array of objects
 def add_CE():
     ce = []
 
