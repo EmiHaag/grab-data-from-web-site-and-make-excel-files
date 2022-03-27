@@ -1,8 +1,9 @@
 import json
 import os
 
-
+#list employees, select one and remove it from employees json file
 def removeCE():
+    
     #open json file
     f = open('ce.json')
     data = []
@@ -12,9 +13,6 @@ def removeCE():
     #open file once for reading and close it.
     with open('ce.json', "r") as jsonFile:
         data=json.load(jsonFile)
-
-
-
 
     def list_ce():
         clear = lambda: os.system('cls')
@@ -44,10 +42,6 @@ def removeCE():
                 else:
                     print("exit.. ")
                     break
-
-
-
-
 
 
 
