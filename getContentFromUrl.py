@@ -69,7 +69,8 @@ for n in list_ce:
         raise SystemExit(e)
 
 
-    #calls to createExcel script in excel.py    
+    #calls to createExcel script in excel.py 
+    #                (data_array, email_employee, extra_data_employee)
     excel.createExcel(parts_surplus_ce, str(n["mail"]), totalUSDSurplus )
    
     parts_surplus_ce = []
