@@ -1,6 +1,7 @@
 import os
 import json
 
+#list all employees from json file
 def listar():
    ce=[]
    clear = lambda: os.system('cls')
